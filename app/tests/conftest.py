@@ -12,7 +12,6 @@ TEST_DATABASE_URL = "mysql+pymysql://root:root@localhost/retromaniacos_test"
 os.environ['APP_ENV'] = 'test'  # Set environment variable to indicate test mode
 # 2. Create a separate engine for testing
 test_engine = create_engine(TEST_DATABASE_URL, echo=True)
-print(f"Using test database URL: {TEST_DATABASE_URL}")
 # 3. Create the override function
 def get_session_override():
     """Override the getSession dependency to use the test database."""

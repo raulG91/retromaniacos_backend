@@ -28,6 +28,13 @@ def get_current_user(token: Annotated[str,Depends(oauth2_schema)],session: Sessi
         username = payload.get("sub",None)
         if username is None:
             raise credentials_exception
+        else:
+            #Check if token has expired
+            exp = payload.get("exp", None)
+            if exp is None or datetime.fromtimestamp(exp, timezone.utc) < datetime.now(timezone.utc):
+                raise credentials_exception
+
+
     except InvalidTokenError:
         raise credentials_exception
         
@@ -110,7 +117,7 @@ def authenticate_user(email: str, password: str, session: SessionDep) -> User | 
 
 def create_access_token(username: str)->str:
     payload = {"sub": username,
-               "exp": datetime.now(timezone.utc)  + timedelta(ACCESS_TOKEN_EXPIRE_MINUTES)}
+               "exp": datetime.now(timezone.utc)  + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)}
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
