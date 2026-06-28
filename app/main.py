@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from .routes.user import userRouter
 from .routes.event import eventRouter
 from .routes.material import materialRouter
+from .routes.event_participation import participationRouter
 from .db import create_db_and_tables
 import os
 
@@ -18,3 +19,4 @@ def on_startup():
 app.include_router(userRouter)
 app.include_router(eventRouter)
 app.include_router(materialRouter)
+app.include_router(participationRouter)

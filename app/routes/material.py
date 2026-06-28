@@ -5,6 +5,7 @@ from ..models.material import Material, MaterialIn, MaterialOut, MaterialService
 from .user import get_current_active_user
 from ..models.user import UserOut
 from datetime import date
+from ..exceptions import MaterialNotFoundException
 
 materialRouter = APIRouter(tags=["Material"], prefix="/api")
 
@@ -26,7 +27,7 @@ async def get_materials(current_user:Annotated[UserOut, Depends(get_current_acti
 async def get_material_by_id(material_id: int, current_user: Annotated[UserOut, Depends(get_current_active_user)], session: SessionDep) -> MaterialOut:
     try:
         return MaterialService.get_material_by_id(material_id, current_user.id, session)
-    except ValueError as ve:
+    except MaterialNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error fetching material")
@@ -34,7 +35,7 @@ async def get_material_by_id(material_id: int, current_user: Annotated[UserOut, 
 async def delete_material(material_id: int, current_user: Annotated[UserOut, Depends(get_current_active_user)], session: SessionDep):
     try:
         MaterialService.delete_material(material_id, current_user.id, session)
-    except ValueError as ve:
+    except MaterialNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error deleting material")    
@@ -43,7 +44,7 @@ async def delete_material(material_id: int, current_user: Annotated[UserOut, Dep
 async def update_material(material_id:int, material_update: Annotated[MaterialUpdate, Body()],current_user: Annotated[UserOut, Depends(get_current_active_user)], session: SessionDep) -> MaterialOut:
     try:
         return MaterialService.update_material(material_id, material_update, current_user.id, session)
-    except ValueError as ve:
+    except MaterialNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating material")
@@ -53,7 +54,7 @@ async def replace_material(material_id:int, material: Annotated[MaterialIn, Body
     try:
 
         return MaterialService.replace_material(material_id, material, current_user.id, session)
-    except ValueError as ve:
+    except MaterialNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error replacing material")

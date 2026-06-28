@@ -5,6 +5,7 @@ from ..models.event import EventIn, EventOut, EventUpdate, EventService
 from .user import get_current_active_user
 from ..models.user import UserOut
 from datetime import date
+from ..exceptions import EventNotFoundException
 
 eventRouter = APIRouter(tags=["Event"], prefix="/api")
 
@@ -28,7 +29,7 @@ async def get_event_by_id(event_id:int, current_user: Annotated[UserOut, Depends
     try:
         event = EventService.getEventById(event_id, session)
         return event
-    except ValueError as ve:
+    except EventNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error fetching event")
@@ -36,7 +37,7 @@ async def get_event_by_id(event_id:int, current_user: Annotated[UserOut, Depends
 async def deleteEvent(event_id:int, current_user: Annotated[UserOut, Depends(get_current_active_user)], session: SessionDep):
     try:
         EventService.deleteEvent(event_id, session)
-    except ValueError as ve:
+    except EventNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))    
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error deleting event")
@@ -46,7 +47,7 @@ async def updateEvent(event_id:int,event_update: Annotated[EventUpdate,Body()],c
     try:
         event = EventService.updateEvent(event_id, event_update, session)
         return event
-    except ValueError as ve:
+    except EventNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating event")
@@ -55,7 +56,7 @@ async def replaceEvent(event_id:int,event_update: Annotated[EventIn,Body()],curr
     try:
         event = EventService.replaceEvent(event_id, event_update, session)
         return event
-    except ValueError as ve:
+    except EventNotFoundException as ve:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'Error updating event')

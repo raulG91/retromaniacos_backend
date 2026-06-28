@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import date, datetime, timezone
 from sqlmodel import SQLModel, Field as sqlmodel_Field, Session, select
-
+from ..exceptions import MaterialNotFoundException
 class MaterialType(str,Enum):
     CONSOLE = "Console"
     GAME = "Game"
@@ -73,7 +73,7 @@ class MaterialService:
         except Exception as e:
             raise Exception(f"Error fetching material: {str(e)}")        
         if not material:
-            raise ValueError("Material not found")
+            raise MaterialNotFoundException("Material not found")
         return material
   
     @staticmethod
@@ -84,7 +84,7 @@ class MaterialService:
         except Exception as e:
                 raise Exception(f"Error fetching material: {str(e)}")    
         if not material:
-            raise ValueError("Material not found")
+            raise MaterialNotFoundException("Material not found")
         material.active = False
         material.lastModifiedDate = datetime.now(timezone.utc)
         try:
@@ -101,7 +101,7 @@ class MaterialService:
         except Exception as e:
                 raise Exception(f"Error fetching material: {str(e)}")    
         if not material:
-            raise ValueError("Material not found")
+            raise MaterialNotFoundException("Material not found")
         if material_update.name is not None:
             material.name = material_update.name
         if material_update.description is not None:
@@ -125,7 +125,7 @@ class MaterialService:
         except Exception as e:
                 raise Exception(f"Error fetching material: {str(e)}")    
         if not material:
-            raise ValueError("Material not found")
+            raise MaterialNotFoundException("Material not found")
         material.name = materialReplace.name
         material.description = materialReplace.description
         material.type = materialReplace.type

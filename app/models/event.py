@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from datetime import date as dt_date, datetime, timezone
 from sqlmodel import SQLModel, Field as sqlmodel_Field, Session, select
-
+from ..exceptions import EventNotFoundException
 
 class EventIn(BaseModel):
     name: str  = Field(description="Name of the event",min_length=10,max_length=50)
@@ -89,7 +89,7 @@ class EventService:
         if event:
             return event
         else:
-            raise ValueError(f"Event with id {id} not found o inactive")
+            raise EventNotFoundException(f"Event with id {id} not found o inactive")
     
     @staticmethod
     def deleteEvent(id:int, session: Session):
@@ -104,7 +104,7 @@ class EventService:
             session.add(event)
             session.commit()
         else: 
-            raise ValueError(f"Event with id {id} not found o inactive")
+            raise EventNotFoundException(f"Event with id {id} not found o inactive")
     @staticmethod
     def updateEvent(id:int,event_update:EventUpdate,session: Session) -> Event:
         statement = select(Event).where(Event.eventId == id, Event.active == True)
@@ -122,7 +122,7 @@ class EventService:
             session.refresh(eventDb)    
             return eventDb
         else:
-            raise ValueError(f"Event with id {id} not found o inactive")
+            raise EventNotFoundException(f"Event with id {id} not found o inactive")
     @staticmethod
     def replaceEvent(id:int, event_replace:EventIn, session: Session) -> Event:
         statement = select(Event).where(Event.eventId == id, Event.active == True)
@@ -145,6 +145,6 @@ class EventService:
             session.refresh(eventDb)    
             return eventDb
         else:
-            raise ValueError(f"Event with id {id} not found o inactive")
+            raise EventNotFoundException(f"Event with id {id} not found o inactive")
         
 
