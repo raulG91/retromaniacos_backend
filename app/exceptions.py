@@ -11,3 +11,9 @@ class UserParticipationNotFoundException(Exception):
 class MaterialNotFoundException(Exception):
     """Raised when a material is not found."""
     pass
+class EventMaterialNotFoundException(Exception):
+    """Raised when a material is not associated with an event."""
+    pass
+class MaterialAlreadyAssociatedException(Exception):
+    """Raised when a material is already associated with an event."""
+    pass

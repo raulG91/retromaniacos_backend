@@ -3,6 +3,7 @@ from .routes.user import userRouter
 from .routes.event import eventRouter
 from .routes.material import materialRouter
 from .routes.event_participation import participationRouter
+from .routes.event_material import eventMaterialRouter
 from .db import create_db_and_tables
 import os
 
@@ -20,3 +21,4 @@ app.include_router(userRouter)
 app.include_router(eventRouter)
 app.include_router(materialRouter)
 app.include_router(participationRouter)
+app.include_router(eventMaterialRouter)
