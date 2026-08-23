@@ -5,7 +5,7 @@ from typing import Annotated
 from .models.user import User
 from .models.event import Event
 
-DATABASE_URL = os.getenv("DATABASE_URL","mysql+pymysql://root:root@localhost/retromaniacos")
+DATABASE_URL = os.getenv("DATABASE_URL")
 print(f"Using database URL: {DATABASE_URL}")
 
 if DATABASE_URL is None:

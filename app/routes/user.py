@@ -8,8 +8,9 @@ from ..util import verify_password
 from datetime import datetime, timedelta,timezone
 import jwt
 from jwt.exceptions import InvalidTokenError
+import os
 
-SECRET_KEY = "95fe806ed3095f3a6b4373b37a24b580981a10dfbacd54c8ca5b99fdd0e06bee"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 userRouter = APIRouter(tags=["User"],prefix="/api")

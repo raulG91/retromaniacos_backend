@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 from .routes.user import userRouter
 from .routes.event import eventRouter
@@ -7,6 +9,9 @@ from .routes.event_material import eventMaterialRouter
 from .db import create_db_and_tables
 import os
 
+
+
+print("Secret key",os.getenv("SECRET_KEY"))
 app = FastAPI()
 #On startup event, create the database and tables if needed
 @app.on_event("startup")
